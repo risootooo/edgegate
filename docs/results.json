@@ -1,0 +1,188 @@
+[
+  {
+    "name": "Mirage (curve-fit scalper)",
+    "verdict": "FAIL",
+    "n_trades": 44,
+    "n_trials": 500,
+    "base_cost_pct": 0.1,
+    "profit_factor_net": 1.410227619371412,
+    "sharpe_net": 0.13687129969031583,
+    "total_return_net_pct": 3.989476888937258,
+    "mcpt_p_value": 0.1819636072785443,
+    "mcpt_p_value_pf": 0.1819636072785443,
+    "dsr_probability": 0.02786759416112952,
+    "walkforward_consistency": 0.6,
+    "walkforward_positive_folds": 3,
+    "walkforward_folds": [
+      {
+        "fold": 1,
+        "total_return": 1.5465524174278817,
+        "profit_factor": 1.9885889300245527,
+        "sharpe": 0.26092057440666655
+      },
+      {
+        "fold": 2,
+        "total_return": 3.12482345312368,
+        "profit_factor": Infinity,
+        "sharpe": 5.902836647412267
+      },
+      {
+        "fold": 3,
+        "total_return": -1.5682396086245283,
+        "profit_factor": 0.588918898662807,
+        "sharpe": -0.2074874659156462
+      },
+      {
+        "fold": 4,
+        "total_return": 3.2623148828548105,
+        "profit_factor": Infinity,
+        "sharpe": 3.008737354959854
+      },
+      {
+        "fold": 5,
+        "total_return": -2.375974255844587,
+        "profit_factor": 0.45326021215726053,
+        "sharpe": -0.3090738363627969
+      }
+    ],
+    "cost_stress": [
+      {
+        "multiplier": 1.0,
+        "total_return": 3.989476888937258,
+        "profit_factor": 1.410227619371412,
+        "sharpe": 0.13687129969031583
+      },
+      {
+        "multiplier": 2.0,
+        "total_return": -0.4105231110627424,
+        "profit_factor": 0.9606214066882038,
+        "sharpe": -0.014084260500387899
+      },
+      {
+        "multiplier": 3.0,
+        "total_return": -4.810523111062745,
+        "profit_factor": 0.5691087236080427,
+        "sharpe": -0.1650398206910917
+      }
+    ],
+    "profit_factor_gross": 1.9295785897462032,
+    "bootstrap_dd_median_pct": 3.8013734105876167,
+    "bootstrap_dd_p95_pct": 8.891705774701743,
+    "realised_max_dd_pct": 3.7628895674187444,
+    "gates": [
+      {
+        "name": "Monte Carlo Permutation Test",
+        "passed": false,
+        "detail": "p = 0.1820 (need < 0.05)"
+      },
+      {
+        "name": "Deflated Sharpe Ratio",
+        "passed": false,
+        "detail": "P(true SR > 0) = 0.028 after 500 trials (need > 0.95)"
+      },
+      {
+        "name": "Walk-Forward Consistency",
+        "passed": true,
+        "detail": "3/5 folds profitable (consistency 60%, need >= 60%)"
+      },
+      {
+        "name": "Cost Stress (2x)",
+        "passed": false,
+        "detail": "at 2x costs: total -0.41%, PF 0.96 (need total > 0 and PF > 1)"
+      }
+    ]
+  },
+  {
+    "name": "Modest Edge (small real drift)",
+    "verdict": "PASS",
+    "n_trades": 1500,
+    "n_trials": 25,
+    "base_cost_pct": 0.05,
+    "profit_factor_net": 1.390634457558274,
+    "sharpe_net": 0.13297253913038265,
+    "total_return_net_pct": 220.36967466175747,
+    "mcpt_p_value": 0.0001999600079984003,
+    "mcpt_p_value_pf": 0.0001999600079984003,
+    "dsr_probability": 0.9991122374614492,
+    "walkforward_consistency": 1.0,
+    "walkforward_positive_folds": 5,
+    "walkforward_folds": [
+      {
+        "fold": 1,
+        "total_return": 48.453976313366596,
+        "profit_factor": 1.4318743367712579,
+        "sharpe": 0.14663200523628694
+      },
+      {
+        "fold": 2,
+        "total_return": 21.878782650710463,
+        "profit_factor": 1.1800473725113316,
+        "sharpe": 0.065527553999438
+      },
+      {
+        "fold": 3,
+        "total_return": 35.46738897548823,
+        "profit_factor": 1.3110938157266017,
+        "sharpe": 0.11205008270326595
+      },
+      {
+        "fold": 4,
+        "total_return": 43.452505543276246,
+        "profit_factor": 1.3899700890669513,
+        "sharpe": 0.13020376998831468
+      },
+      {
+        "fold": 5,
+        "total_return": 71.11702117891596,
+        "profit_factor": 1.6773862977330638,
+        "sharpe": 0.2077288717827891
+      }
+    ],
+    "cost_stress": [
+      {
+        "multiplier": 1.0,
+        "total_return": 220.36967466175747,
+        "profit_factor": 1.390634457558274,
+        "sharpe": 0.13297253913038265
+      },
+      {
+        "multiplier": 2.0,
+        "total_return": 145.36967466175747,
+        "profit_factor": 1.2433628848541105,
+        "sharpe": 0.08771703630275433
+      },
+      {
+        "multiplier": 3.0,
+        "total_return": 70.36967466175747,
+        "profit_factor": 1.111399748672928,
+        "sharpe": 0.042461533475126004
+      }
+    ],
+    "profit_factor_gross": 1.5551864462553375,
+    "bootstrap_dd_median_pct": 17.159372762211866,
+    "bootstrap_dd_p95_pct": 27.408591379268326,
+    "realised_max_dd_pct": 15.638477120649043,
+    "gates": [
+      {
+        "name": "Monte Carlo Permutation Test",
+        "passed": true,
+        "detail": "p = 0.0002 (need < 0.05)"
+      },
+      {
+        "name": "Deflated Sharpe Ratio",
+        "passed": true,
+        "detail": "P(true SR > 0) = 0.999 after 25 trials (need > 0.95)"
+      },
+      {
+        "name": "Walk-Forward Consistency",
+        "passed": true,
+        "detail": "5/5 folds profitable (consistency 100%, need >= 60%)"
+      },
+      {
+        "name": "Cost Stress (2x)",
+        "passed": true,
+        "detail": "at 2x costs: total +145.37%, PF 1.24 (need total > 0 and PF > 1)"
+      }
+    ]
+  }
+]
