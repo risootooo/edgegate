@@ -218,3 +218,61 @@ def test_report_is_self_contained_html(tmp_path):
     text = out.read_text(encoding="utf-8")
     assert "FAIL" in text and "<svg" in text
     assert "http://" not in text and "https://" not in text   # fully offline
+
+
+# ----------------------------------------------------------------------
+# CSV loading (load_returns_csv -- the public entry point for own trades)
+# ----------------------------------------------------------------------
+
+from edgegate import load_returns_csv
+
+
+def _write_csv(tmp_path, text):
+    path = tmp_path / "trades.csv"
+    path.write_text(text, encoding="utf-8")
+    return str(path)
+
+
+def test_load_returns_csv_named_column(tmp_path):
+    path = _write_csv(tmp_path, "trade,return_pct\n1,0.5\n2,-0.25\n3,1.0\n")
+    assert np.allclose(load_returns_csv(path), [0.5, -0.25, 1.0])
+
+
+def test_load_returns_csv_column_name_is_case_insensitive(tmp_path):
+    path = _write_csv(tmp_path, "PnL\n0.5\n-0.25\n")
+    assert np.allclose(load_returns_csv(path), [0.5, -0.25])
+
+
+def test_load_returns_csv_candidate_priority(tmp_path):
+    # return_pct outranks pnl in the candidate list, wherever it appears.
+    path = _write_csv(tmp_path, "pnl,return_pct\n9.9,0.5\n8.8,-0.25\n")
+    assert np.allclose(load_returns_csv(path), [0.5, -0.25])
+
+
+def test_load_returns_csv_falls_back_to_first_numeric_column(tmp_path):
+    path = _write_csv(tmp_path, "label,amount\nwin,0.5\nloss,-0.25\n")
+    assert np.allclose(load_returns_csv(path), [0.5, -0.25])
+
+
+def test_load_returns_csv_drops_missing_values(tmp_path):
+    path = _write_csv(tmp_path, "return_pct\n0.5\n\n-0.25\n")
+    assert np.allclose(load_returns_csv(path), [0.5, -0.25])
+
+
+def test_load_returns_csv_no_numeric_column_raises(tmp_path):
+    path = _write_csv(tmp_path, "label,note\nwin,good\nloss,bad\n")
+    with pytest.raises(ValueError):
+        load_returns_csv(path)
+
+
+def test_load_returns_csv_bundled_examples():
+    from pathlib import Path
+
+    examples = Path(__file__).resolve().parents[1] / "examples"
+    mirage = load_returns_csv(str(examples / "mirage_trades.csv"))
+    modest = load_returns_csv(str(examples / "modest_edge_trades.csv"))
+    assert len(mirage) == 44
+    assert len(modest) == 1500
+    # The bundled CSVs are the same series the generators produce.
+    assert np.allclose(mirage, generate_mirage().returns)
+    assert np.allclose(modest, generate_modest_edge().returns)

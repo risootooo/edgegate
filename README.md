@@ -1,7 +1,7 @@
 # EdgeGate
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-23%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-30%20passing-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Dependencies](https://img.shields.io/badge/deps-numpy%20%C2%B7%20pandas%20%C2%B7%20scipy-blue)
 ![Report](https://img.shields.io/badge/report-self--contained%20HTML-purple)
