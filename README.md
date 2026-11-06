@@ -1,6 +1,6 @@
 # EdgeGate
 
-![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white) ![release](https://img.shields.io/github/v/release/risootooo/edgegate)
 ![Tests](https://img.shields.io/badge/tests-30%20passing-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Dependencies](https://img.shields.io/badge/deps-numpy%20%C2%B7%20pandas%20%C2%B7%20scipy-blue)
@@ -23,6 +23,15 @@ No verdict is bought with a pretty equity curve. A strategy must pass
 > generated from the real computed distributions).
 
 ---
+
+## Contents
+- [Your backtest is lying to you](#your-backtest-is-lying-to-you-edgegate-proves-it-in-60-seconds)
+- [The killer demo: Mirage vs Modest Edge](#the-killer-demo-mirage-vs-modest-edge)
+- [Quickstart](#quickstart)
+- [How it works — the five analyses](#how-it-works--the-five-analyses)
+- [Architecture](#architecture)
+- [Limitations (stated, not buried)](#limitations-stated-not-buried)
+- [References](#references) · [License](#license)
 
 ## The killer demo: Mirage vs Modest Edge
 
