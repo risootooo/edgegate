@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from .data import demo_strategies, load_returns_csv, profit_factor
@@ -80,7 +81,12 @@ def main(argv: list[str] | None = None) -> int:
 
     reports: list[StrategyReport] = []
     if args.csv:
-        returns = load_returns_csv(args.csv)
+        try:
+            returns = load_returns_csv(args.csv)
+        except (ValueError, OSError) as exc:
+            print(f"error: cannot load trades from {args.csv!r}: {exc}",
+                  file=sys.stderr)
+            return 2
         reports.append(evaluate_strategy(
             args.name, returns, n_trials=args.trials, base_cost_pct=args.cost,
             n_permutations=args.permutations, n_resamples=args.resamples))

@@ -276,3 +276,35 @@ def test_load_returns_csv_bundled_examples():
     # The bundled CSVs are the same series the generators produce.
     assert np.allclose(mirage, generate_mirage().returns)
     assert np.allclose(modest, generate_modest_edge().returns)
+
+
+def test_load_returns_csv_header_only_raises_with_filename(tmp_path):
+    path = _write_csv(tmp_path, "return_pct\n")
+    with pytest.raises(ValueError, match="No usable trade returns"):
+        load_returns_csv(path)
+
+
+def test_load_returns_csv_all_missing_raises(tmp_path):
+    path = _write_csv(tmp_path, "return_pct,note\n,good\n,bad\n")
+    with pytest.raises(ValueError, match="No usable trade returns"):
+        load_returns_csv(path)
+
+
+def test_load_returns_csv_non_numeric_value_raises_and_names_it(tmp_path):
+    path = _write_csv(tmp_path, "return_pct\n0.5\nabc\n-0.25\n")
+    with pytest.raises(ValueError, match="non-numeric"):
+        load_returns_csv(path)
+
+
+def test_load_returns_csv_non_finite_value_raises(tmp_path):
+    path = _write_csv(tmp_path, "return_pct\n0.5\ninf\n-0.25\n")
+    with pytest.raises(ValueError, match="non-finite"):
+        load_returns_csv(path)
+
+
+def test_cli_bad_csv_returns_2_without_traceback(tmp_path, capsys):
+    from edgegate.__main__ import main
+
+    path = _write_csv(tmp_path, "return_pct\n")
+    assert main(["--csv", path, "--output", str(tmp_path / "r.html")]) == 2
+    assert "error: cannot load trades" in capsys.readouterr().err

@@ -71,22 +71,60 @@ def max_drawdown(returns: np.ndarray) -> float:
 _CANDIDATE_COLUMNS = ("return_pct", "return", "returns", "pnl", "pnl_pct")
 
 
+def _to_returns(series: pd.Series, column: str, path: str) -> np.ndarray:
+    """Convert one CSV column to a validated return series.
+
+    Missing values (blank cells / NaN) are dropped, matching the
+    documented behaviour.  Anything else that is not a finite number
+    is a data error and raises a ``ValueError`` naming the file and
+    column, instead of surfacing later as an obscure crash deep in
+    the statistics or report code.  An empty result raises too: a
+    strategy with zero trades cannot be evaluated.
+    """
+    present = series.dropna()
+    values = pd.to_numeric(present, errors="coerce")
+    bad = values.isna()
+    if bad.any():
+        examples = ", ".join(repr(v) for v in present[bad].head(3))
+        raise ValueError(
+            f"Column {column!r} in {path!r} contains non-numeric "
+            f"value(s): {examples}"
+        )
+    result = values.to_numpy(dtype=float)
+    if result.size == 0:
+        raise ValueError(
+            f"No usable trade returns in {path!r}: column {column!r} "
+            "is empty or all values are missing"
+        )
+    if not np.isfinite(result).all():
+        raise ValueError(
+            f"Column {column!r} in {path!r} contains non-finite "
+            "value(s) (inf/-inf); trade returns must be finite percents"
+        )
+    return result
+
+
 def load_returns_csv(path: str) -> np.ndarray:
     """Load a trade-return series from a CSV file.
 
     Looks for a column named one of ``return_pct``, ``return``, ``returns``,
     ``pnl`` or ``pnl_pct`` (case-insensitive).  If none is present, the first
     numeric column is used.  Values are interpreted as percent per trade.
+
+    Raises ``ValueError`` with a message naming the file (and column,
+    where applicable) when the file holds no usable returns, a named
+    column holds non-numeric or non-finite values, or no numeric
+    column exists at all.
     """
     df = pd.read_csv(path)
     lower = {c.lower(): c for c in df.columns}
     for cand in _CANDIDATE_COLUMNS:
         if cand in lower:
-            return df[lower[cand]].dropna().to_numpy(dtype=float)
+            return _to_returns(df[lower[cand]], lower[cand], path)
     numeric = df.select_dtypes(include=[np.number])
     if numeric.shape[1] == 0:
         raise ValueError(f"No numeric column found in {path!r}")
-    return numeric.iloc[:, 0].dropna().to_numpy(dtype=float)
+    return _to_returns(numeric.iloc[:, 0], str(numeric.columns[0]), path)
 
 
 # ---------------------------------------------------------------------------
